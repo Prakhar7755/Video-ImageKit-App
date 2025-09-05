@@ -23,7 +23,9 @@ export async function connectToDatabase() {
       maxPoolSize: 10,
     };
 
-    mongoose.connect(MONGODB_URI, options).then(() => mongoose.connection);
+    cached.promise = mongoose
+      .connect(MONGODB_URI, options)
+      .then(() => mongoose.connection);
   }
 
   try {
@@ -35,3 +37,29 @@ export async function connectToDatabase() {
 
   return cached.conn;
 }
+
+/* 
+EASIER VERSION
+
+import mongoose from "mongoose";
+
+const MONGODB_URI = process.env.MONGODB_URI!;
+
+let isConnected = false; // track the connection state
+
+export async function connectToDatabase() {
+  if (isConnected) {
+    return;
+  }
+
+  try {
+    await mongoose.connect(MONGODB_URI);
+    isConnected = true;
+    console.log("✅ MongoDB connected");
+  } catch (error) {
+    console.error("❌ MongoDB connection error:", error);
+    throw error;
+  }
+}
+
+*/
