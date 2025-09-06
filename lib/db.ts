@@ -1,10 +1,9 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const MONGODB_URI =
-  process.env.MONGODB_URI!; /* exclamatory mark for typescript check */
+const MONGODB_URI = process.env.MONGODB_URI!; /* exclamatory mark for typescript check */
 
 if (!MONGODB_URI) {
-  throw new Error("Please define mongo uri in ENV file");
+  throw new Error('Please define mongo uri in ENV file');
 }
 
 let cached = global.mongoose;
@@ -23,9 +22,7 @@ export async function connectToDatabase() {
       maxPoolSize: 10,
     };
 
-    cached.promise = mongoose
-      .connect(MONGODB_URI, options)
-      .then(() => mongoose.connection);
+    cached.promise = mongoose.connect(MONGODB_URI, options).then(() => mongoose.connection);
   }
 
   try {

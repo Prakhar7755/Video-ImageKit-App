@@ -1,4 +1,4 @@
-import { Connection } from "mongoose";
+import { Connection } from 'mongoose';
 
 declare global {
   var mongoose: {
@@ -7,7 +7,7 @@ declare global {
   };
 }
 
-export { };
+export {};
 
 /* 
 You're using Mongoose in your Next.js app to connect to MongoDB.

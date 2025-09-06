@@ -1,39 +1,36 @@
-import { NextAuthOptions } from "next-auth";
-import GithubProvider from "next-auth/providers/github";
-import DiscordProvider from "next-auth/providers/discord";
-import GoogleProvider from "next-auth/providers/google";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { connectToDatabase } from "./db";
-import User from "@/models/User";
-import bcrypt from "bcryptjs";
+import { NextAuthOptions } from 'next-auth';
+import GithubProvider from 'next-auth/providers/github';
+import DiscordProvider from 'next-auth/providers/discord';
+import GoogleProvider from 'next-auth/providers/google';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { connectToDatabase } from './db';
+import User from '@/models/User';
+import bcrypt from 'bcryptjs';
 
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: 'Credentials',
       credentials: {
-        email: { label: "Email", type: "test" },
-        password: { label: "Password", type: "password" },
+        email: { label: 'Email', type: 'test' },
+        password: { label: 'Password', type: 'password' },
       },
 
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("MIssing email or password");
+          throw new Error('MIssing email or password');
         }
         try {
           await connectToDatabase();
           const user = await User.findOne({ email: credentials.email });
 
           if (!user) {
-            throw new Error("No user found with this email");
+            throw new Error('No user found with this email');
           }
-          const isValid = await bcrypt.compare(
-            credentials.password,
-            user.password
-          );
+          const isValid = await bcrypt.compare(credentials.password, user.password);
 
           if (!isValid) {
-            throw new Error("Password not valid");
+            throw new Error('Password not valid');
           }
 
           return {
@@ -41,7 +38,7 @@ export const authOptions: NextAuthOptions = {
             email: user.email,
           };
         } catch (err: any) {
-          console.error("Auth error:", err.message);
+          console.error('Auth error:', err.message);
           throw err;
         }
       },
@@ -80,12 +77,12 @@ export const authOptions: NextAuthOptions = {
   },
 
   pages: {
-    signIn: "/login",
-    error: "/login",
+    signIn: '/login',
+    error: '/login',
   },
 
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60,
   },
   secret: process.env.NEXTAUTH_SECRET,
